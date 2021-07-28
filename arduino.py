@@ -1,26 +1,61 @@
 import requests
-import json
+import random
+import time
+from datetime import date, datetime
 
-option = True
+temperature = 30.0
+lastTemperature = 30.0
+humidity = 20.0
+lastHumidity = 20.0
 
+actualTime = datetime.now()
+date = actualTime.strftime("%d/%m/%Y %H:%M:%S")
 
+print("Welcome to the greenhouse sensor terminal")
 
-print("Welcome to the app")
+IdArduino = "IdArduino_1"
 
-while option:
-    IdSensor = input("Please enter the id sensor: ")
+REQUEST_URL = f"https://app-api-iot.herokuapp.com/?IdArduino={IdArduino}&date={date}"
+_request = requests.get(REQUEST_URL)
+print(_request.text)
 
-    SensorValue = input("Please insert the value of the sensor: ")
-
-    REQUEST_URL = f"https://app-api-iot.herokuapp.com/option/?IdSensor={IdSensor}&SensorValue={SensorValue}"
-    _request = requests.get(REQUEST_URL)
-
-    print("Do you like to continue? [Y/N]")
-
-    _option = input()
-    _option = _option.lower()
-
-    if _option == 'y':
-        option = True
+def sensorStatus(temperature, lastTemperature, humidity, lastHumidity):
+    
+    if((lastTemperature-temperature)>=1 or (temperature-lastTemperature)>=1):
+        return True
+    elif((lastHumidity-humidity)>=1 or (humidity-lastHumidity)>=1):
+        return True
     else:
-        option = False
+        return False
+
+while True:
+    
+    temperature = round(random.uniform(temperature-2, temperature+2),2)
+    if temperature > 40:
+        temperature = 40
+    elif temperature < 0:
+        temperature = 0
+    
+    humidity = round(random.uniform(humidity-10, humidity+10),2)
+    if humidity > 50:
+        humidity = 50
+    elif humidity < 3:
+        humidity = 3
+
+    
+    actualTime = datetime.now()
+    date = actualTime.strftime("%d/%m/%Y %H:%M:%S")
+
+    
+    if(sensorStatus(temperature, lastTemperature, humidity, lastHumidity)):
+        """ The request for the data """
+        REQUEST_URL = f"https://app-api-iot.herokuapp.com/?IdArduino={IdArduino}&temperature={temperature}&humidity={humidity}&date={date}"
+        _request = requests.get(REQUEST_URL)
+        print(_request.text)
+
+    # The variables for the last measurement are updated
+    lastTemperature = temperature
+    lastHumidity = humidity
+
+    # Three seconds to start the next measurement
+    time.sleep(15)
