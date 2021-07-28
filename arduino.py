@@ -15,7 +15,7 @@ print("Welcome to the greenhouse sensor terminal")
 
 IdArduino = "IdArduino_1"
 
-REQUEST_URL = f"https://app-api-iot.herokuapp.com/?IdArduino={IdArduino}&date={date}"
+REQUEST_URL = f"https://app-api-iot.herokuapp.com/createGreenhouse/?IdArduino={IdArduino}&date={date}"
 _request = requests.get(REQUEST_URL)
 print(_request.text)
 
@@ -49,7 +49,7 @@ while True:
     
     if(sensorStatus(temperature, lastTemperature, humidity, lastHumidity)):
         """ The request for the data """
-        REQUEST_URL = f"https://app-api-iot.herokuapp.com/?IdArduino={IdArduino}&temperature={temperature}&humidity={humidity}&date={date}"
+        REQUEST_URL = f"https://app-api-iot.herokuapp.com/insertData/?IdArduino={IdArduino}&temperature={temperature}&humidity={humidity}&date={date}"
         _request = requests.get(REQUEST_URL)
         print(_request.text)
 
