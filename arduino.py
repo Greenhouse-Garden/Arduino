@@ -3,34 +3,26 @@ import random
 import time
 from datetime import date, datetime
 
-temperature = 30.0
-lastTemperature = 30.0
-humidity = 20.0
-lastHumidity = 20.0
+temperature = 30
+lastTemperature = 30
+humidity = 20
+lastHumidity = 20
 
-actualTime = datetime.now()
-date = actualTime.strftime("%d/%m/%Y %H:%M:%S")
+IdArduino = "6519150005"
+print(IdArduino,"Esta es la id de su sistema arduino")
 
-print("Welcome to the greenhouse sensor terminal")
-
-IdArduino = "IdArduino_1"
-
-REQUEST_URL = f"https://app-api-iot.herokuapp.com/createGreenhouse/?IdArduino={IdArduino}&date={date}"
-_request = requests.get(REQUEST_URL)
-print(_request.text)
-
+ 
 def sensorStatus(temperature, lastTemperature, humidity, lastHumidity):
     
-    if((lastTemperature-temperature)>=1 or (temperature-lastTemperature)>=1):
+    if(temperature != lastTemperature):
         return True
-    elif((lastHumidity-humidity)>=1 or (humidity-lastHumidity)>=1):
-        return True
+    
     else:
         return False
 
 while True:
     
-    temperature = round(random.uniform(temperature-2, temperature+2),2)
+    temperature = round(random.uniform(temperature-5, temperature+5),2)
     if temperature > 40:
         temperature = 40
     elif temperature < 0:
@@ -48,14 +40,11 @@ while True:
 
     
     if(sensorStatus(temperature, lastTemperature, humidity, lastHumidity)):
-        """ The request for the data """
-        REQUEST_URL = f"https://app-api-iot.herokuapp.com/insertData/?IdArduino={IdArduino}&temperature={temperature}&humidity={humidity}&date={date}"
+        REQUEST_URL = f"http://127.0.0.1:5000/insertData/?IdArduino={IdArduino}&temperature={temperature}&humidity={humidity}&date={date}"
         _request = requests.get(REQUEST_URL)
         print(_request.text)
 
-    # The variables for the last measurement are updated
     lastTemperature = temperature
     lastHumidity = humidity
 
-    # Three seconds to start the next measurement
-    time.sleep(15)
+    time.sleep(30)
