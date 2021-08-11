@@ -40,7 +40,7 @@ while True:
 
     
     if(sensorStatus(temperature, lastTemperature, humidity, lastHumidity)):
-        REQUEST_URL = f"http://127.0.0.1:5000/insertData/?IdArduino={IdArduino}&temperature={temperature}&humidity={humidity}&date={date}"
+        REQUEST_URL = f"https://greenhouse-iot-api.herokuapp.com/insertData/?IdArduino={IdArduino}&temperature={temperature}&humidity={humidity}&date={date}"
         _request = requests.get(REQUEST_URL)
         print(_request.text)
 
