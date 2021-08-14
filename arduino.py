@@ -8,15 +8,19 @@ lastTemperature = 30
 humidity = 20
 lastHumidity = 20
 
+print("Esta es la id de su sistema arduino")
+
 IdArduino = "6519150005"
-print(IdArduino,"Esta es la id de su sistema arduino")
+
+print(IdArduino)
 
  
 def sensorStatus(temperature, lastTemperature, humidity, lastHumidity):
     
     if(temperature != lastTemperature):
         return True
-    
+    elif(humidity != lastHumidity):
+        return True
     else:
         return False
 
@@ -47,4 +51,4 @@ while True:
     lastTemperature = temperature
     lastHumidity = humidity
 
-    time.sleep(30)
+    time.sleep(3)
